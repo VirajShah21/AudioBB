@@ -1,10 +1,24 @@
 package org.virajshah.audiobb
 
-class Book(title: String, author: String) {
-    init {
-        var title = title
-        var author = author
-    }
+class Book(_title: String, _author: String) {
+    var title = _title
+    var author = _author
 }
 
-class BookList: ArrayList<Book>()
+class BookList : ArrayList<Book>() {
+    val titles: ArrayList<String>
+        get() {
+            var res = ArrayList<String>()
+            for (book in this)
+                res.add(book.title)
+            return res
+        }
+
+    val authors: ArrayList<String>
+        get() {
+            var res = ArrayList<String>()
+            for (book in this)
+                res.add(book.author)
+            return res
+        }
+}
