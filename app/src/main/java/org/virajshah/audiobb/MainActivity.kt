@@ -17,16 +17,28 @@ class MainActivity : AppCompatActivity() {
             bl.add(Book("The Myth of the Robber Barons", "Burton W. Folsom"))
             bl.add(Book("The Road to Serfdom", "F.A. Hayek"))
         }
+
+        lateinit var activity: MainActivity
     }
 
+
+    var bl = BookList()
+    lateinit var blView: BookListFragment
+    lateinit var detailsView: BookDetailsFragment
+
     init {
-        var bl = BookList()
         populateBookList(bl)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_main)
+
+        blView = BookListFragment.newInstance(bl)
+        detailsView = BookDetailsFragment.newInstance()
+        activity = this
+
     }
 
 }

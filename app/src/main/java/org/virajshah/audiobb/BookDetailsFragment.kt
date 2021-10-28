@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -17,9 +19,11 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class BookDetailsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    var model = BookViewModel()
+
+    init {
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,8 +37,29 @@ class BookDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val rootView = inflater.inflate(R.layout.fragment_book_details, container, false)
+
+        val titleView = rootView.findViewById<TextView>(R.id.display_title)
+        val authorView = rootView.findViewById<TextView>(R.id.display_author)
+
+        val titleObserver = Observer<String> { newTitle ->
+            titleView.text = newTitle
+        }
+
+        val authorObserver = Observer<String> { newAuthor ->
+            authorView.text = newAuthor
+        }
+
+        model.title.observe(viewLifecycleOwner, titleObserver)
+        model.author.observe(viewLifecycleOwner, authorObserver)
+
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_book_details, container, false)
+        return rootView
+    }
+
+    fun update(title: String, author: String) {
+
     }
 
     companion object {
@@ -48,11 +73,9 @@ class BookDetailsFragment : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance() =
             BookDetailsFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
                 }
             }
     }
