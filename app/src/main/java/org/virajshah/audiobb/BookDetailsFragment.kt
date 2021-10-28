@@ -21,16 +21,9 @@ private const val ARG_PARAM2 = "param2"
 class BookDetailsFragment : Fragment() {
     var model = BookViewModel()
 
-    init {
-
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -39,8 +32,8 @@ class BookDetailsFragment : Fragment() {
     ): View? {
         val rootView = inflater.inflate(R.layout.fragment_book_details, container, false)
 
-        val titleView = rootView.findViewById<TextView>(R.id.display_title)
-        val authorView = rootView.findViewById<TextView>(R.id.display_author)
+        val titleView = rootView.findViewById<TextView>(R.id.details_title)
+        val authorView = rootView.findViewById<TextView>(R.id.details_author)
 
         val titleObserver = Observer<String> { newTitle ->
             titleView.text = newTitle

@@ -3,10 +3,11 @@ package org.virajshah.audiobb
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import org.jetbrains.annotations.NotNull
 
-class BookAdapter: RecyclerView.Adapter<BookAdapter.ViewHolder>() {
+class BookAdapter : RecyclerView.Adapter<BookAdapter.ViewHolder>() {
 
     var books: BookList? = null
 
@@ -23,17 +24,20 @@ class BookAdapter: RecyclerView.Adapter<BookAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(viewHolder: ViewHolder, @NotNull position: Int) {
         val book = books!![position]
-        viewHolder.imageView.setOnClickListener {
-            MainActivity.activity.detailsView.update(books!![position].title, books!![position].author)
+        viewHolder.titleView.setOnClickListener {
+            MainActivity.activity.detailsView.update(
+                books!![position].title,
+                books!![position].author
+            )
         }
     }
 
     class ViewHolder(itemLayoutView: View) :
         RecyclerView.ViewHolder(itemLayoutView) {
-        val imageView = itemLayoutView.findViewById<ImageView>(R.id.image)
+        val titleView = itemLayoutView.findViewById<TextView>(R.id.item_title)
     }
 
     override fun getItemCount(): Int {
-        return images.size
+        return books!!.size
     }
 }
