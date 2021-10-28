@@ -2,6 +2,7 @@ package org.virajshah.audiobb
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -26,19 +27,25 @@ class MainActivity : AppCompatActivity() {
     lateinit var blView: BookListFragment
     lateinit var detailsView: BookDetailsFragment
 
-    init {
-        populateBookList(bl)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
+
+        populateBookList(bl)
+
+
+
 
         blView = BookListFragment.newInstance(bl)
         detailsView = BookDetailsFragment.newInstance()
         activity = this
 
+        supportFragmentManager.beginTransaction().add(R.id.booklist_fragment, blView)
+            .add(R.id.details_fragment, detailsView).commit()
+
+        var rv = findViewById<RecyclerView>(R.id.booklist)
+        rv.adapter = BookAdapter()
     }
 
 }

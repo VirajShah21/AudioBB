@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragmentContainerView"
+        android:id="@+id/booklist_fragment"
         android:name="org.virajshah.audiobb.BookListFragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -15,4 +15,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/details_fragment"
+        android:name="org.virajshah.audiobb.BookDetailsFragment"
+        android:layout_width="417dp"
+        android:layout_height="354dp"
+        app:layout_constraintBottom_toBottomOf="@+id/booklist_fragment"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
