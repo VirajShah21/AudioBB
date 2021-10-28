@@ -43,9 +43,6 @@ class MainActivity : AppCompatActivity() {
 
         supportFragmentManager.beginTransaction().add(R.id.booklist_fragment, blView)
             .add(R.id.details_fragment, detailsView).commit()
-
-        var rv = findViewById<RecyclerView>(R.id.booklist)
-        rv.adapter = BookAdapter()
     }
 
 }
