@@ -1,4 +1,4 @@
-package org.virajshah.audiobb
+package edu.temple.audiobb
 
 import org.junit.Test
 

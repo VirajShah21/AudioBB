@@ -1,4 +1,4 @@
-package org.virajshah.audiobb
+package edu.temple.audiobb
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("org.virajshah.audiobb", appContext.packageName)
+        assertEquals("edu.temple.audiobb", appContext.packageName)
     }
 }
