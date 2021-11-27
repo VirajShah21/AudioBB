@@ -51,11 +51,14 @@ class MainActivity : AppCompatActivity(), BookListFragment.BookSelectedInterface
             supportFragmentManager.popBackStack()
         }
 
+
+
         // If this is the first time the activity is loading, go ahead and add a BookListFragment
         if (savedInstanceState == null) {
             bookListFragment = BookListFragment()
             supportFragmentManager.beginTransaction()
                 .add(R.id.container1, bookListFragment, BOOKLISTFRAGMENT_KEY)
+                .hide(supportFragmentManager.findFragmentById(R.id.controllerContainer)!!)
                 .commit()
         } else {
             bookListFragment = supportFragmentManager.findFragmentByTag(BOOKLISTFRAGMENT_KEY) as BookListFragment
@@ -95,6 +98,7 @@ class MainActivity : AppCompatActivity(), BookListFragment.BookSelectedInterface
         if (isSingleContainer) {
             supportFragmentManager.beginTransaction()
                 .replace(R.id.container1, BookDetailsFragment())
+                .show(supportFragmentManager.findFragmentById(R.id.controllerContainer)!!)
                 .setReorderingAllowed(true)
                 .addToBackStack(null)
                 .commit()

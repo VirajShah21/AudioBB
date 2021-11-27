@@ -1,10 +1,10 @@
 package edu.temple.audiobb
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.ImageButton
+import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
 import com.android.volley.toolbox.Volley
@@ -21,14 +21,17 @@ class SearchActivity : AppCompatActivity() {
 
             Volley.newRequestQueue(this).add(
                 JsonArrayRequest(Request.Method.GET, url, null, {
-                    setResult(RESULT_OK,
-                        Intent().putExtra(BookList.BOOKLIST_KEY, BookList().apply{populateBooks(it)})
+                    setResult(
+                        RESULT_OK,
+                        Intent().putExtra(
+                            BookList.BOOKLIST_KEY,
+                            BookList().apply { populateBooks(it) })
                     )
                     finish()
                 }, {})
             )
 
-
+            
         }
     }
 }

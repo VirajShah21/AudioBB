@@ -37,6 +37,7 @@ class BookListFragment : Fragment() {
                 // Inform the activity of the selection so as to not have the event replayed
                 // when the activity is restarted
                 (activity as BookSelectedInterface).bookSelected()
+
         }
         with (view as RecyclerView) {
             layoutManager = LinearLayoutManager(requireActivity())
