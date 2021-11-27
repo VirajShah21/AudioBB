@@ -40,7 +40,7 @@ class ControlFragment : Fragment() {
         val resultView = inflater.inflate(R.layout.fragment_control, container, false)
 
         resultView.findViewById<Button>(R.id.playPause).setOnClickListener {
-
+            PlayerSer
         }
 
         return resultView;
