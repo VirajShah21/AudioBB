@@ -4,11 +4,9 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Handler
 import android.os.IBinder
-import android.os.Message
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
@@ -18,7 +16,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import edu.temple.audlibplayer.PlayerService
-import java.lang.StringBuilder
 import java.util.*
 import android.widget.SeekBar.OnSeekBarChangeListener
 
@@ -165,8 +162,10 @@ class MainActivity : AppCompatActivity(), BookListFragment.BookSelectedInterface
 
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 // TODO Auto-generated method stub
-                playerPosition = progress
-                audioService.seekTo(progress)
+                if (fromUser) {
+                    playerPosition = progress
+                    audioService.seekTo(progress)
+                }
             }
         })
 
