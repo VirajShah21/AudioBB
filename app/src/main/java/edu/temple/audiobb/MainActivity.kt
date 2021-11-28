@@ -1,23 +1,45 @@
 package edu.temple.audiobb
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.IBinder
 import android.view.View
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import edu.temple.audlibplayer.PlayerService
+import android.content.ComponentName
+
+import android.content.ServiceConnection
+
+
+
 
 class MainActivity : AppCompatActivity(), BookListFragment.BookSelectedInterface {
 
     private lateinit var bookListFragment: BookListFragment
-    private var audioServiceBound = false
-    private lateinit var player: PlayerService
+    private var serviceBound = false
+    private lateinit var audioService: PlayerService.MediaControlBinder
 
-    private var audioServiceConnection = AudioServiceConnection(this)
+    private val audioServiceConnection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName, service: IBinder) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            val binder: PlayerService.MediaControlBinder = service as PlayerService.MediaControlBinder
+//            player = binder.getService()
+            audioService = binder
+            serviceBound = true
+
+            Toast.makeText(this@MainActivity, "Service Bound", Toast.LENGTH_SHORT).show()
+        }
+
+        override fun onServiceDisconnected(name: ComponentName) {
+            serviceBound = false
+        }
+    }
 
     private val searchRequest =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -43,6 +65,12 @@ class MainActivity : AppCompatActivity(), BookListFragment.BookSelectedInterface
 
     companion object {
         const val BOOKLISTFRAGMENT_KEY = "BookListFragment"
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val audioServiceIntent = Intent(this, PlayerService::class.java)
+        bindService(audioServiceIntent, audioServiceConnection, Context.BIND_AUTO_CREATE)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,7 +119,6 @@ class MainActivity : AppCompatActivity(), BookListFragment.BookSelectedInterface
         findViewById<ImageButton>(R.id.searchButton).setOnClickListener {
             searchRequest.launch(Intent(this, SearchActivity::class.java))
         }
-
     }
 
     override fun onBackPressed() {
@@ -112,14 +139,11 @@ class MainActivity : AppCompatActivity(), BookListFragment.BookSelectedInterface
                 .addToBackStack(null)
                 .commit()
         }
-    }
 
-    fun playMedia() {
 
-        Intent(this, PlayerService::class.java).also {
-            startService(intent)
+
+        findViewById<Button>(R.id.playPause).setOnClickListener {
+            audioService.play(1)
         }
-
-
     }
 }
