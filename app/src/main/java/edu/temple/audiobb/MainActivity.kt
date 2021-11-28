@@ -148,6 +148,8 @@ class MainActivity : AppCompatActivity(), BookListFragment.BookSelectedInterface
         }
 
         var seekbar = findViewById<SeekBar>(R.id.seekBar)
+        playerPosition = 0
+        seekbar.progress = 0
 
         seekbar.max = selectedBookViewModel.getSelectedBook().value!!.duration
 
