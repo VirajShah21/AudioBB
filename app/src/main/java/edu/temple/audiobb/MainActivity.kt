@@ -174,9 +174,14 @@ class MainActivity : AppCompatActivity(), BookListFragment.BookSelectedInterface
             if (isPlaying) {
                 audioService.pause()
             } else {
-                audioService.play(1)
+                audioService.play(selectedBookViewModel.getSelectedBook().value!!.id)
             }
             isPlaying = true
+        }
+
+        findViewById<Button>(R.id.stopButton).setOnClickListener {
+            isPlaying = false
+            audioService.stop()
         }
 
         updateDisplay()
