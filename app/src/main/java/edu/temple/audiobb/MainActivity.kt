@@ -1,20 +1,27 @@
 package edu.temple.audiobb
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
+import android.os.Message
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import edu.temple.audlibplayer.PlayerService
-import android.content.ComponentName
+import java.lang.StringBuilder
+import java.util.*
+import android.widget.SeekBar.OnSeekBarChangeListener
 
-import android.content.ServiceConnection
 
 
 
@@ -24,11 +31,14 @@ class MainActivity : AppCompatActivity(), BookListFragment.BookSelectedInterface
     private lateinit var bookListFragment: BookListFragment
     private var serviceBound = false
     private lateinit var audioService: PlayerService.MediaControlBinder
+    private var playerPosition: Int = 0
+    private var isPlaying = false
 
     private val audioServiceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, service: IBinder) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
-            val binder: PlayerService.MediaControlBinder = service as PlayerService.MediaControlBinder
+            val binder: PlayerService.MediaControlBinder =
+                service as PlayerService.MediaControlBinder
 //            player = binder.getService()
             audioService = binder
             serviceBound = true
@@ -140,10 +150,47 @@ class MainActivity : AppCompatActivity(), BookListFragment.BookSelectedInterface
                 .commit()
         }
 
+        var seekbar = findViewById<SeekBar>(R.id.seekBar)
 
+        seekbar.max = selectedBookViewModel.getSelectedBook().value!!.duration
+
+        seekbar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                // TODO Auto-generated method stub
+            }
+
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                // TODO Auto-generated method stub
+                playerPosition = progress
+                audioService.seekTo(progress)
+            }
+        })
 
         findViewById<Button>(R.id.playPause).setOnClickListener {
-            audioService.play(1)
+            if (isPlaying) {
+                audioService.pause()
+            } else {
+                audioService.play(1)
+            }
+            isPlaying = true
         }
+
+        updateDisplay()
+    }
+
+    private fun updateDisplay() {
+        val timer = Timer()
+        timer.schedule(object : TimerTask() {
+            override fun run() {
+               if (audioService.isPlaying) {
+                   playerPosition++;
+                   findViewById<SeekBar>(R.id.seekBar).progress = playerPosition
+               }
+            }
+        }, 0, 1000) //Update text every second
     }
 }
