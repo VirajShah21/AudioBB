@@ -1,35 +1,43 @@
 package edu.temple.audiobb
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.IBinder
 import android.view.View
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import edu.temple.audlibplayer.PlayerService
 
 class MainActivity : AppCompatActivity(), BookListFragment.BookSelectedInterface {
 
-    private lateinit var bookListFragment : BookListFragment
+    private lateinit var bookListFragment: BookListFragment
+    private var audioServiceBound = false
+    private lateinit var player: PlayerService
 
-    private val searchRequest = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        supportFragmentManager.popBackStack()
-        it.data?.run {
-            bookListViewModel.copyBooks(getSerializableExtra(BookList.BOOKLIST_KEY) as BookList)
-            bookListFragment.bookListUpdated()
+    private var audioServiceConnection = AudioServiceConnection(this)
+
+    private val searchRequest =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            supportFragmentManager.popBackStack()
+            it.data?.run {
+                bookListViewModel.copyBooks(getSerializableExtra(BookList.BOOKLIST_KEY) as BookList)
+                bookListFragment.bookListUpdated()
+            }
+
         }
 
-    }
-
-    private val isSingleContainer : Boolean by lazy{
+    private val isSingleContainer: Boolean by lazy {
         findViewById<View>(R.id.container2) == null
     }
 
-    private val selectedBookViewModel : SelectedBookViewModel by lazy {
+    private val selectedBookViewModel: SelectedBookViewModel by lazy {
         ViewModelProvider(this).get(SelectedBookViewModel::class.java)
     }
 
-    private val bookListViewModel : BookList by lazy {
+    private val bookListViewModel: BookList by lazy {
         ViewModelProvider(this).get(BookList::class.java)
     }
 
@@ -47,10 +55,10 @@ class MainActivity : AppCompatActivity(), BookListFragment.BookSelectedInterface
         // If we're switching from one container to two containers
         // clear BookDetailsFragment from container1
         if (supportFragmentManager.findFragmentById(R.id.container1) is BookDetailsFragment
-            && selectedBookViewModel.getSelectedBook().value != null) {
+            && selectedBookViewModel.getSelectedBook().value != null
+        ) {
             supportFragmentManager.popBackStack()
         }
-
 
 
         // If this is the first time the activity is loading, go ahead and add a BookListFragment
@@ -61,7 +69,8 @@ class MainActivity : AppCompatActivity(), BookListFragment.BookSelectedInterface
                 .hide(supportFragmentManager.findFragmentById(R.id.controllerContainer)!!)
                 .commit()
         } else {
-            bookListFragment = supportFragmentManager.findFragmentByTag(BOOKLISTFRAGMENT_KEY) as BookListFragment
+            bookListFragment =
+                supportFragmentManager.findFragmentByTag(BOOKLISTFRAGMENT_KEY) as BookListFragment
             // If activity loaded previously, there's already a BookListFragment
             // If we have a single container and a selected book, place it on top
             if (isSingleContainer && selectedBookViewModel.getSelectedBook().value != null) {
@@ -103,5 +112,14 @@ class MainActivity : AppCompatActivity(), BookListFragment.BookSelectedInterface
                 .addToBackStack(null)
                 .commit()
         }
+    }
+
+    fun playMedia() {
+
+        Intent(this, PlayerService::class.java).also {
+            startService(intent)
+        }
+
+
     }
 }
